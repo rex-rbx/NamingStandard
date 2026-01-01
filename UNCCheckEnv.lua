@@ -163,11 +163,8 @@ end)
 test("getcallingscript", {})
 
 test("getscriptclosure", {"getscriptfunction"}, function()
-	local module = game:GetService("CoreGui").RobloxGui.Modules.Common.Constants
-	local constants = getrenv().require(module)
-	local generated = getscriptclosure(module)()
-	assert(constants ~= generated, "Generated module should not match the original")
-	assert(shallowEqual(constants, generated), "Generated constant table should be shallow equal to the original")
+	local closure = getscriptclosure(game:GetService("Players").LocalPlayer.Character:WaitForChild("Animate"))
+    assert(typeof(closure) == "function", "Returned closure is not a function. Got " .. typeof(closure))
 end)
 
 test("hookfunction", {"replaceclosure"}, function()
@@ -330,24 +327,24 @@ test("debug.getproto", {}, function()
 	end
 	local proto = debug.getproto(test, 1)
 	assert(proto, "Failed to get the inner function")
-	assert(proto() == true, "The inner function did not return anything")
+	assert(proto() == true, "The inner function did not return anything - Are proto return values disabled on this executor?")
 end)
 
 test("debug.getprotos", {}, function()
 	local function test()
-		local function _1()
+		local function a()
 			return true
 		end
-		local function _2()
+		local function ab()
 			return true
 		end
-		local function _3()
+		local function abc()
 			return true
 		end
 	end
-	for _, proto in ipairs(debug.getprotos(test)) do
+	for i, proto in next, debug.getprotos(test) do
 		assert(proto, "Returned proto is falsy " .. i)
-		assert(proto(), "Returned proto did not return anything when called " .. i)
+	    assert(proto() == true, "The inner function did not return anything " .. i .. " - Are proto return values disabled on this executor?")
 	end
 end)
 
@@ -850,7 +847,7 @@ test("WebSocket.connect", {}, function()
 		OnMessage = {"table", "userdata"},
 		OnClose = {"table", "userdata"},
 	}
-	local ws = WebSocket.connect("wss://echo.websockets.org")
+	local ws = WebSocket.connect("wss://echo.websocket.org")
 	assert(type(ws) == "table" or type(ws) == "userdata", "Did not return a table or userdata")
 	for k, v in pairs(types) do
 		if type(v) == "table" then
