@@ -328,13 +328,9 @@ test("debug.getproto", {}, function()
 			return true
 		end
 	end
-	local proto = debug.getproto(test, 1, true)[1]
-	local realproto = debug.getproto(test, 1)
+	local proto = debug.getproto(test, 1)
 	assert(proto, "Failed to get the inner function")
 	assert(proto() == true, "The inner function did not return anything")
-	if not realproto() then
-		return "Proto return values are disabled on this executor"
-	end
 end)
 
 test("debug.getprotos", {}, function()
@@ -349,13 +345,9 @@ test("debug.getprotos", {}, function()
 			return true
 		end
 	end
-	for i in ipairs(debug.getprotos(test)) do
-		local proto = debug.getproto(test, i, true)[1]
-		local realproto = debug.getproto(test, i)
-		assert(proto(), "Failed to get inner function " .. i)
-		if not realproto() then
-			return "Proto return values are disabled on this executor"
-		end
+	for _, proto in ipairs(debug.getprotos(test)) do
+		assert(proto, "Returned proto is falsy " .. i)
+		assert(proto(), "Returned proto did not return anything when called " .. i)
 	end
 end)
 
@@ -691,7 +683,7 @@ test("queue_on_teleport", {"queueonteleport"})
 
 test("request", {"http.request", "http_request"}, function()
 	local response = request({
-		Url = "https://httpbin.org/user-agent",
+		Url = "https://httpbin.io/user-agent",
 		Method = "GET",
 	})
 	assert(type(response) == "table", "Response must be a table")
@@ -858,7 +850,7 @@ test("WebSocket.connect", {}, function()
 		OnMessage = {"table", "userdata"},
 		OnClose = {"table", "userdata"},
 	}
-	local ws = WebSocket.connect("ws://echo.websocket.events")
+	local ws = WebSocket.connect("wss://echo.websockets.org")
 	assert(type(ws) == "table" or type(ws) == "userdata", "Did not return a table or userdata")
 	for k, v in pairs(types) do
 		if type(v) == "table" then
@@ -869,3 +861,4 @@ test("WebSocket.connect", {}, function()
 	end
 	ws:Close()
 end)
+
