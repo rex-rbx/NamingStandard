@@ -816,7 +816,7 @@ test("isrenderobj", {}, function()
 	local drawing = Drawing.new("Image")
 	drawing.Visible = true
 	assert(isrenderobj(drawing) == true, "Did not return true for an Image")
-	assert(isrenderobj(newproxy()) == false, "Did not return false for a blank table")
+	assert(isrenderobj(newproxy()) == false, "Did not return false for a blank userdata")
 end)
 
 test("getrenderproperty", {}, function()
@@ -864,6 +864,7 @@ test("WebSocket.connect", {}, function()
 	end
 	ws:Close()
 end)
+
 
 
 
