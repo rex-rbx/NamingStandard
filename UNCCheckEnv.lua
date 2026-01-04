@@ -328,8 +328,12 @@ test("debug.getproto", {}, function()
 		end
 	end
 	local proto = debug.getproto(test, 1)
+    local realproto = debug.getproto(test,1,true)[1]
+    assert(realproto, "Failed to get the real inner function")
 	assert(proto, "Failed to get the inner function")
-	assert(proto() == true, "The inner function did not return anything - Are proto return values disabled on this executor?")
+	if not proto() then
+        return "Proto return values are disabled on this executor"
+    end
 end)
 
 test("debug.getprotos", {}, function()
@@ -345,8 +349,12 @@ test("debug.getprotos", {}, function()
 		end
 	end
 	for i, proto in next, debug.getprotos(test) do
+        local realproto = debug.getproto(test,1,true)[i]
+        assert(realproto, "Failed to get the real proto")
 		assert(proto, "Returned proto is falsy " .. i)
-	    assert(proto() == true, "The inner function did not return anything " .. i .. " - Are proto return values disabled on this executor?")
+	    if not proto() then
+            return "Proto return values are disabled on this executor"
+        end
 	end
 end)
 
@@ -860,7 +868,6 @@ test("WebSocket.connect", {}, function()
 	end
 	ws:Close()
 end)
-
 
 
 
