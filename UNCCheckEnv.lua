@@ -767,7 +767,7 @@ test("getscripts", {}, function()
 	assert(type(scripts) == "table", "Did not return a table")
 	assert(#scripts > 0, "Did not return a table with any values")
 	assert(typeof(scripts[1]) == "Instance", "First value is not an Instance")
-	assert(scripts[1]:IsA("ModuleScript") or scripts[1]:IsA("LocalScript"), "First value is not a ModuleScript or LocalScript")
+	assert(scripts[1]:IsA("ModuleScript") or scripts[1]:IsA("LocalScript") or scripts[1]:IsA("Script"), "First value is not a ModuleScript, LocalScript or Script")
 end)
 
 test("getsenv", {}, function()
@@ -858,4 +858,5 @@ test("WebSocket.connect", {}, function()
 	end
 	ws:Close()
 end)
+
 
