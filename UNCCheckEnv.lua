@@ -208,7 +208,7 @@ end)
 test("newcclosure", {}, function()
 	local iscclosure = iscclosure
 	if not iscclosure then
-		function iscclosure()
+		iscclosure = function(f)
 			return debug.info(f, "s") == "[C]" -- for testing if the newcclosure works properly
 		end
 	end
@@ -864,6 +864,7 @@ test("WebSocket.connect", {}, function()
 	end
 	ws:Close()
 end)
+
 
 
 
