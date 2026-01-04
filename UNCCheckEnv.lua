@@ -206,6 +206,12 @@ test("loadstring", {}, function()
 end)
 
 test("newcclosure", {}, function()
+	local iscclosure = iscclosure
+	if not iscclosure then
+		function iscclosure()
+			return debug.info(f, "s") == "[C]" -- for testing if the newcclosure works properly
+		end
+	end
 	local function test()
 		return true
 	end
@@ -858,5 +864,6 @@ test("WebSocket.connect", {}, function()
 	end
 	ws:Close()
 end)
+
 
 
